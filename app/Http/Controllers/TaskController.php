@@ -24,7 +24,22 @@ class TaskController {
     }
 
     public function getTaskById($id) {
-        return "Task ".$id;
+        $task = Task::find($id);
+
+        if(!$task){
+            $data = [
+                'message' => 'Task not founded',
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $data = [
+            'task' => $task,
+            'status' => 200
+        ];
+
+        return response()->json($data, 200);
     }
 
     public function createTask(Request $request) {
