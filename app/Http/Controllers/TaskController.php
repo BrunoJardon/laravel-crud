@@ -80,11 +80,64 @@ class TaskController {
         return response()->json($data, 201);
     }
     
-    public function editTask($id) {
-        return "Task ".$id." edited";
+    public function editTask(Request $request, $id) {
+        $task = Task::find($id);
+
+        if(!$task){
+            $data = [
+                'message' => 'Task not founded',
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:25',
+            'description' => 'max:255',
+            'done' => 'required|boolean'
+        ]);
+
+        if($validator->fails()){
+            $data = [
+                'message' => 'Error at validate',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->done = $request->done;
+
+        $task->save();
+
+        $data = [
+            'task' => "Task edited",
+            'status' => 200
+        ];
+
+        return response()->json($data, 200);
     }
 
     public function deleteTask($id) {
-        return "Task ".$id." deleted";
+        $task = Task::find($id);
+
+        if(!$task){
+            $data = [
+                'message' => 'Task not founded',
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $task->delete();
+
+        $data = [
+            'task' => 'Task deleted',
+            'status' => 200
+        ];
+
+        return response()->json($data, 200);
     }
 }
