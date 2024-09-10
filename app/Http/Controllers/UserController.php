@@ -9,7 +9,22 @@ use App\Models\User;
 
 class UserController {
     public function getUser($id){
-        return 'Get user '.$id.' data';
+        $user = User::find($id);
+
+        if(!$user){
+            $data = [
+                'message' => 'User not founded',
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $data = [
+            'user' => $user,
+            'status' => 200
+        ];
+
+        return response()->json($data, 200);
     }
 
     public function createUser(Request $request){
@@ -17,7 +32,7 @@ class UserController {
             'name' => 'required|alpha:ascii|max:25',
             'surname' => 'required|alpha:ascii|max:25',
             'password' => 'required|max:75',
-            'email' => 'required|email|max:75',
+            'email' => 'required|email|unique:users|max:75',
             'phone' => 'required|max:14'
         ]);
 
