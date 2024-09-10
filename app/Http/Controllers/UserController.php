@@ -69,8 +69,48 @@ class UserController {
         return response()->json($data, 201);
     }
 
-    public function editUser($id){
-        
+    public function editUser($id, Request $request){
+        $user = User::find($id);
+
+        if(!$user){
+            $data = [
+                'message' => 'User not found',
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|alpha:ascii|max:25',
+            'surname' => 'required|alpha:ascii|max:25',
+            'password' => 'required|max:75',
+            'email' => 'required|email|unique:users|max:75',
+            'phone' => 'required|max:14'
+        ]);
+
+        if($validator->fails()){
+            $data = [
+                'message' => 'Error at validate',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->password = Hash::make($request->password);
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+
+        $user->save();
+
+        $data = [
+            'message' => 'User edited',
+            'status' => 200
+        ];
+
+        return response($data, 200);
     }
 
     public function deleteUser($id){
