@@ -28,7 +28,7 @@ class TaskController {
 
         if(!$task){
             $data = [
-                'message' => 'Task not founded',
+                'message' => 'Task not found',
                 'status' => 400
             ];
             return response()->json($data, 400);
@@ -85,7 +85,7 @@ class TaskController {
 
         if(!$task){
             $data = [
-                'message' => 'Task not founded',
+                'message' => 'Task not found',
                 'status' => 400
             ];
             return response()->json($data, 400);
@@ -125,7 +125,7 @@ class TaskController {
 
         if(!$task){
             $data = [
-                'message' => 'Task not founded',
+                'message' => 'Task not found',
                 'status' => 400
             ];
             return response()->json($data, 400);
