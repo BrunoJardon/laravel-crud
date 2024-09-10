@@ -13,7 +13,7 @@ class UserController {
 
         if(!$user){
             $data = [
-                'message' => 'User not founded',
+                'message' => 'User not found',
                 'status' => 400
             ];
             return response()->json($data, 400);
@@ -70,10 +70,27 @@ class UserController {
     }
 
     public function editUser($id){
-        return 'Edit user '.$id.' data';
+        
     }
 
     public function deleteUser($id){
-        return 'Delete user '.$id;
+        $user = User::find($id);
+
+        if(!$user){
+            $data = [
+                'message' => 'User not found',
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $user->delete();
+
+        $data = [
+            'message' => 'Deleted successfully',
+            'status' => 200
+        ];
+
+        return response()->json($data, 200);
     }
 }
